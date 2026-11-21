@@ -1,0 +1,6 @@
+schema=1 race_id=demo01 phase=1 status=PASS
+check=unique_registration result=PASS
+check=ready_before_start result=PASS
+check=one_response_per_request result=PASS
+check=no_action_before_start result=PASS
+check=clean_session_end result=PASS

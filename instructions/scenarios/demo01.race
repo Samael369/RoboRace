@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "race_id": "demo01",
+  "track_length": 6,
+  "tick_ms": 200,
+  "max_ticks": 30,
+  "seed": 17,
+  "robots": [
+    {
+      "id": "R1",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "OPEN:C1",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R2",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    }
+  ],
+  "chests": [
+    {
+      "id": "C1",
+      "position": 2,
+      "type": "TURBO",
+      "boost_moves": 2
+    }
+  ],
+  "bridges": [
+    {
+      "id": "B1",
+      "start": 3,
+      "end": 4,
+      "capacity": 1
+    }
+  ]
+}

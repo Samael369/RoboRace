@@ -1,0 +1,13 @@
+schema=1 race_id=chest_race phase=2 status=FAIL
+check=unique_registration result=PASS
+check=ready_before_start result=PASS
+check=one_response_per_request result=PASS
+check=no_action_before_start result=PASS
+check=clean_session_end result=PASS
+check=single_chest_owner result=FAIL
+check=valid_movement result=PASS
+check=bridge_capacity result=PASS
+check=one_winner result=PASS
+check=request_completion result=PASS
+check=resource_cleanup result=PASS
+check=thread_lifecycle result=PASS

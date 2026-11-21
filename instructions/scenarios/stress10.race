@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "race_id": "stress10",
+  "track_length": 6,
+  "tick_ms": 250,
+  "max_ticks": 100,
+  "seed": 1,
+  "robots": [
+    {
+      "id": "R1",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R2",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R3",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R4",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R5",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R6",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R7",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R8",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R9",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R10",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    }
+  ],
+  "chests": [],
+  "bridges": [
+    {
+      "id": "B1",
+      "start": 2,
+      "end": 3,
+      "capacity": 1
+    }
+  ]
+}

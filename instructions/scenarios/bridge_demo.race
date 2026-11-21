@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "race_id": "bridge_demo",
+  "track_length": 6,
+  "tick_ms": 250,
+  "max_ticks": 30,
+  "seed": 1,
+  "robots": [
+    {
+      "id": "R1",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    },
+    {
+      "id": "R2",
+      "actions": [
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE",
+        "MOVE"
+      ]
+    }
+  ],
+  "chests": [],
+  "bridges": [
+    {
+      "id": "B1",
+      "start": 2,
+      "end": 3,
+      "capacity": 1
+    }
+  ]
+}
