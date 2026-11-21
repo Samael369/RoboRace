@@ -1,0 +1,25 @@
+# Executables
+/server
+/controller
+/robot
+/launcher
+/verifier
+/bin/
+
+# Object and dependency files
+obj/
+*.o
+*.d
+
+# Runtime logs and reports
+events.log
+verify_report.txt
+*.log
+
+# Editor and OS directories
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
