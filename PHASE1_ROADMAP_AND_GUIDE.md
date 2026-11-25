@@ -1,13 +1,13 @@
-# RoboRace Phase 1: Architecture, Team Task Breakdown & C Knowledge Guide
+# RoboRace Phase 1: Architecture, Team Task Breakdown & C++17 Systems Guide
 
 > **Note on Academic Integrity & Project Rules**:
-> As agreed, **no AI code generation is used**. Every line of C code must be written by hand by you and your teammate. This document provides the engineering roadmap, system architecture, task distribution, and a comprehensive C / POSIX concepts refresher to guide your implementation and debugging.
+> As agreed, **no AI code generation is used**. Every line of C++ code must be written by hand by you and your teammate. This document provides the engineering roadmap, system architecture, task distribution, and a comprehensive C++17 / POSIX concepts refresher to guide your implementation and debugging.
 
 ---
 
 ## 1. Project High-Level Architecture & Protocol Overview
 
-In Phase 1 of **RoboRace**, the objective is to build a robust, multi-process distributed simulation framework on Linux using **C** and **TCP sockets**. 
+In Phase 1 of **RoboRace**, the objective is to build a robust, multi-process distributed simulation framework on Linux using **C++17** and **POSIX TCP sockets**. 
 
 ### 1.1 The Five Main Components
 
@@ -413,27 +413,27 @@ RoboRace/
 │   ├── examples/
 │   └── scenarios/
 ├── include/                  # Header files
-│   ├── cJSON.h               # Third-party cJSON parser
+│   ├── cJSON.h               # Third-party cJSON parser (C/C++ compatible)
 │   ├── protocol.h            # Shared protocol definitions & constants
-│   ├── net_buffer.h          # TCP stream accumulator
-│   ├── scenario.h            # Scenario parser structs
-│   └── logger.h              # Log writer
+│   ├── net_buffer.hpp        # TCP stream accumulator (std::string-based)
+│   ├── scenario.hpp          # Scenario parser structs
+│   └── logger.hpp            # Log writer
 ├── src/                      # Source files
 │   ├── common/
-│   │   ├── cJSON.c
-│   │   ├── net_buffer.c
-│   │   └── scenario.c
+│   │   ├── cJSON.c           # Compiled as C11 by Makefile
+│   │   ├── net_buffer.cpp
+│   │   └── scenario.cpp
 │   ├── server/
-│   │   ├── server_main.c
-│   │   ├── server_logic.c
-│   │   └── logger.c
+│   │   ├── server_main.cpp
+│   │   ├── server_logic.cpp
+│   │   └── logger.cpp
 │   ├── client/
-│   │   ├── robot_main.c
-│   │   └── controller_main.c
+│   │   ├── robot_main.cpp
+│   │   └── controller_main.cpp
 │   ├── launcher/
-│   │   └── launcher_main.c
+│   │   └── launcher_main.cpp
 │   └── verifier/
-│       └── verifier_main.c   # (or verifier.py)
+│       └── verifier_main.cpp # (or verifier.py)
 └── bin/                      # Compiled executables (git-ignored)
 ```
 
@@ -445,8 +445,8 @@ Work incrementally in 6 milestones:
 
 | Phase | Objective | Teammate A | Teammate B |
 |---|---|---|---|
-| **Step 1** | Setup & Parsing | Set up repo, `Makefile`, copy `cJSON.c`/`h` | Implement `scenario.c` to parse `.race` files |
-| **Step 2** | Sockets & Accumulator | Build TCP server + line accumulator buffer | Build basic TCP client connection wrapper |
+| **Step 1** | Setup & Parsing | Set up repo, `Makefile`, copy `cJSON.c` | Implement `scenario.cpp` to parse `.race` files |
+| **Step 2** | Sockets & Accumulator | Build TCP server + `std::string` line accumulator | Build basic TCP client connection wrapper |
 | **Step 3** | Registration Handshake | Server handles `SCENARIO_UPLOAD`, `REGISTER_ROBOT`, `READY`, logs to `events.log` | Controller uploads scenario; Robot registers & sends `READY` |
 | **Step 4** | Barrier & Actions Loop | Server broadcasts `START`, receives `ACTION_REQUEST`, replies `STATE_UPDATE` | Robots wait for `START`, iterate actions, send `CLIENT_DONE` |
 | **Step 5** | Launcher & Session End | Server receives all `CLIENT_DONE`, broadcasts `SESSION_FINISHED`, logs `SESSION_END` | Implement `launcher` with `fork()`, `execvp()`, `waitpid()` |

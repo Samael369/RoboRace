@@ -1,3 +1,5 @@
+CXX ?= g++
+CXXFLAGS ?= -std=c++17 -Wall -Wextra -Wpedantic -g -Iinclude
 CC ?= gcc
 CFLAGS ?= -std=c11 -Wall -Wextra -pedantic -g -Iinclude
 LDFLAGS ?= -lpthread -lm
@@ -9,11 +11,17 @@ BINDIR = bin
 # Core targets required by project spec
 TARGETS = server controller robot launcher verifier
 
-COMMON_SRCS = src/common/cJSON.c
-COMMON_OBJS = $(patsubst src/%.c, $(OBJDIR)/%.o, $(COMMON_SRCS))
+COMMON_C_SRCS = $(wildcard src/common/*.c)
+COMMON_CPP_SRCS = $(wildcard src/common/*.cpp)
+COMMON_OBJS = $(patsubst src/%.c, $(OBJDIR)/%.o, $(COMMON_C_SRCS)) \
+              $(patsubst src/%.cpp, $(OBJDIR)/%.o, $(COMMON_CPP_SRCS))
 
-ALL_C_SRCS = $(wildcard src/*/*.c)
-ALL_HEADERS = $(wildcard include/*.h)
+SERVER_OBJS = $(patsubst src/%.cpp, $(OBJDIR)/%.o, $(wildcard src/server/*.cpp))
+LAUNCHER_OBJS = $(patsubst src/%.cpp, $(OBJDIR)/%.o, $(wildcard src/launcher/*.cpp))
+VERIFIER_OBJS = $(patsubst src/%.cpp, $(OBJDIR)/%.o, $(wildcard src/verifier/*.cpp))
+
+ALL_SRCS = $(wildcard src/*/*.cpp src/*/*.c)
+ALL_HEADERS = $(wildcard include/*.hpp include/*.h)
 
 .PHONY: all clean format check-format dirs help
 
@@ -22,30 +30,35 @@ all: dirs $(TARGETS)
 dirs:
 	@mkdir -p $(OBJDIR)/common $(OBJDIR)/server $(OBJDIR)/client $(OBJDIR)/launcher $(OBJDIR)/verifier $(BINDIR)
 
-# Common object compilation
+# C++ object compilation
+$(OBJDIR)/%.o: src/%.cpp
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $(DEPFLAGS) -c $< -o $@
+
+# C object compilation (e.g., third-party cJSON.c)
 $(OBJDIR)/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(DEPFLAGS) -c $< -o $@
 
 # Target binaries
-server: $(OBJDIR)/server/server_main.o $(COMMON_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+server: $(SERVER_OBJS) $(COMMON_OBJS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 	@cp -f $@ $(BINDIR)/$@
 
 controller: $(OBJDIR)/client/controller_main.o $(COMMON_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 	@cp -f $@ $(BINDIR)/$@
 
 robot: $(OBJDIR)/client/robot_main.o $(COMMON_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 	@cp -f $@ $(BINDIR)/$@
 
-launcher: $(OBJDIR)/launcher/launcher_main.o $(COMMON_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+launcher: $(LAUNCHER_OBJS) $(COMMON_OBJS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 	@cp -f $@ $(BINDIR)/$@
 
-verifier: $(OBJDIR)/verifier/verifier_main.o $(COMMON_OBJS)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+verifier: $(VERIFIER_OBJS) $(COMMON_OBJS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS)
 	@cp -f $@ $(BINDIR)/$@
 
 # Include compiler-generated dependency files
@@ -53,13 +66,13 @@ verifier: $(OBJDIR)/verifier/verifier_main.o $(COMMON_OBJS)
 
 # Code formatting targets using clang-format
 format:
-	@echo "Formatting C source and header files..."
-	@clang-format -i $(ALL_C_SRCS) $(ALL_HEADERS)
+	@echo "Formatting C/C++ source and header files..."
+	@clang-format -i $(ALL_SRCS) $(ALL_HEADERS)
 	@echo "Code formatting complete."
 
 check-format:
 	@echo "Checking formatting compliance..."
-	@clang-format --dry-run --Werror $(ALL_C_SRCS) $(ALL_HEADERS)
+	@clang-format --dry-run --Werror $(ALL_SRCS) $(ALL_HEADERS)
 	@echo "All files conform to formatting rules."
 
 clean:
