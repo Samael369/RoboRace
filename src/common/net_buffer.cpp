@@ -1,4 +1,5 @@
 #include "net_buffer.hpp"
+#include "protocol.hpp"
 #include <cstddef>
 #include <string>
 
@@ -7,7 +8,14 @@ void NetBuffer::append(const char *data, std::size_t len) {
 }
 
 LineStatus NetBuffer::pop_line(std::string &out_line) {
+    using namespace roborace::protocol;
+
     std::size_t newline_position = buffer_.find('\n');
+
+    if (newline_position > MAX_LINE_LENGTH) {
+        return LineStatus::TOO_LONG;
+    }
+
     if (newline_position == std::string::npos) {
         if (buffer_.size() > MAX_LINE_LENGTH) {
             return LineStatus::TOO_LONG;
@@ -15,6 +23,7 @@ LineStatus NetBuffer::pop_line(std::string &out_line) {
             return LineStatus::NEED_MORE;
         }
     }
+
     out_line = buffer_.substr(0, newline_position);
     buffer_.erase(0, newline_position + 1);
 
