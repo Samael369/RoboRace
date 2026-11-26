@@ -13,8 +13,6 @@ class NetBuffer {
     LineStatus pop_line(std::string &out_line);
 
   private:
-    static constexpr std::size_t MAX_LINE_LENGTH = 65536;
-
     // unconsumed bytes received so far from that socket
     std::string buffer_;
 };

@@ -41,4 +41,4 @@ inline constexpr std::string_view ACTOR_LAUNCHER = "LAUNCHER";
 // Phase 1 State Update status
 inline constexpr std::string_view STATUS_RECORDED = "RECORDED";
 
-}  // namespace roborace::protocol
+} // namespace roborace::protocol
