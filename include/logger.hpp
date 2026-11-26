@@ -21,7 +21,7 @@ class Logger {
     std::ofstream file_;
     std::mutex mux_;
 
-    static std::string normalize(const std::string &value) {
+    static std::string_view normalize(std::string_view value) {
         return value.empty() ? "-" : value;
     }
 };

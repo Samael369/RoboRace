@@ -9,7 +9,7 @@ bool Logger::open(const std::string &path) {
         file_.close();
     }
 
-    file_.open(path, std::ios::trunc);
+    file_.open(path, std::ios::out | std::ios::trunc);
 
     return file_.is_open();
 }
