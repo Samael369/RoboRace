@@ -144,6 +144,9 @@ bool ServerNet::handle_client_read(int client_fd, const LineCallback &on_line) {
         LineStatus status = conn.rx_buf.pop_line(line);
         if (status == LineStatus::OK) {
             on_line(client_fd, line);
+            if (clients_.find(client_fd) == clients_.end()) {
+                return true; // Closed by callback; already removed from clients_
+            }
         } else if (status == LineStatus::NEED_MORE) {
             break;
         } else if (status == LineStatus::TOO_LONG) {

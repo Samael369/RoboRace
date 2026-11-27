@@ -12,16 +12,16 @@ LineStatus NetBuffer::pop_line(std::string &out_line) {
 
     std::size_t newline_position = buffer_.find('\n');
 
-    if (newline_position > MAX_LINE_LENGTH) {
-        return LineStatus::TOO_LONG;
-    }
-
     if (newline_position == std::string::npos) {
         if (buffer_.size() > MAX_LINE_LENGTH) {
             return LineStatus::TOO_LONG;
         } else {
             return LineStatus::NEED_MORE;
         }
+    }
+
+    if (newline_position > MAX_LINE_LENGTH) {
+        return LineStatus::TOO_LONG;
     }
 
     out_line = buffer_.substr(0, newline_position);
