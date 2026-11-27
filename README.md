@@ -9,7 +9,7 @@ Welcome to the **RoboRace** OS Project workspace.
 ## Tech Stack & Build
 
 - **Language:** C++17 (`g++`) on Linux (POSIX TCP sockets, `fork`/`execvp`/`waitpid`, `pthread`)
-- **JSON Library:** Vendored header-only `nlohmann/json` (`third_party/nlohmann/json.hpp`)
+- **JSON Library:** Vendored `cJSON` (`include/cJSON.h`, `src/common/cJSON.c`)
 - **Build & Format Commands:**
   - `make` — build `server`, `controller`, `robot`, `launcher`, and `verifier`
   - `make format` — format `src/` and `include/` with `clang-format`
