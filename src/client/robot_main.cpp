@@ -13,9 +13,10 @@
 #include <string_view>
 #include <unistd.h>
 
-namespace{
 using namespace std;
 using namespace roborace::protocol;
+
+namespace{
 
 string make_req_id(const string &robot_id, int seq){
     ostringstream oss;

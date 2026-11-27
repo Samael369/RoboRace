@@ -13,9 +13,10 @@
 #include <string_view>
 #include <unistd.h>
 
-namespace{
 using namespace std;
 using namespace roborace::protocol;
+
+namespace{
 
 void notify_launcher(int &notify_fd, const string &msg){
     if(notify_fd < 0)
