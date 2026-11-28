@@ -33,4 +33,9 @@ wait "$LAUNCHER_PID"
 STATUS=$?
 LAUNCHER_PID=""
 
+if [ "$STATUS" -eq 0 ]; then
+    ./verifier "$SCENARIO" events.log --phase=1
+    STATUS=$?
+fi
+
 exit "$STATUS"
