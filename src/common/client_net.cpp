@@ -14,19 +14,19 @@
 
 using namespace std;
 
-int connect_tcp(const string &host, uint16_t port, int connect_timeout_ms, int recv_timeout_sec){
+int connect_tcp(const string &host, uint16_t port, int connect_timeout_ms, int recv_timeout_sec) {
     sockaddr_in addr{};
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    if(::inet_pton(AF_NET, host.c_str(), &addr.sin_addr) != 1)
+    if (::inet_pton(AF_INET, host.c_str(), &addr.sin_addr) != 1)
         return -1;
     auto deadline = chrono::steady_clock::now() + chrono::milliseconds(connect_timeout_ms);
-    while(true){
-        inf fd = ::socket(AF_NET, SOCK_STREAM, 0);
-        if(fd < 0)
+    while (true) {
+        int fd = ::socket(AF_INET, SOCK_STREAM, 0);
+        if (fd < 0)
             return -1;
 
-        if(::connect(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == 0){
+        if (::connect(fd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == 0) {
             timeval tv{};
             tv.tv_sec = recv_timeout_sec;
             tv.tv_usec = 0;
@@ -35,18 +35,18 @@ int connect_tcp(const string &host, uint16_t port, int connect_timeout_ms, int r
         }
 
         ::close(fd);
-        if(chrono::steady_clock::now() >= deadline)
+        if (chrono::steady_clock::now() >= deadline)
             return -1;
         this_thread::sleep_for(chrono::milliseconds(50));
     }
 }
 
-bool send_all(int fd, const char *data, size_t len, string &err){
+bool send_all(int fd, const char *data, size_t len, string &err) {
     size_t sent = 0;
-    while(sent < len){
+    while (sent < len) {
         ssize_t n = ::send(fd, data + sent, len - sent, MSG_NOSIGNAL);
-        if(n < 0){
-            if(errno == EINTR){
+        if (n < 0) {
+            if (errno == EINTR) {
                 continue;
             }
             err = string("send failed : ") + strerror(errno);
@@ -57,9 +57,9 @@ bool send_all(int fd, const char *data, size_t len, string &err){
     return true;
 }
 
-bool send_json_line(int fd, const cJSON *msg, string &err){
+bool send_json_line(int fd, const cJSON *msg, string &err) {
     char *rendered = cJSON_PrintUnformatted(msg);
-    if(!rendered){
+    if (!rendered) {
         err = "failed to serialize JSON message";
         return false;
     }
@@ -69,45 +69,45 @@ bool send_json_line(int fd, const cJSON *msg, string &err){
     return send_all(fd, wire.data(), wire.size(), err);
 }
 
-bool recv_json_line(int fd, NetBuffer &buf, CJsonPtr &out_msg, string & err){
-    array<char.4096> chunk{};
+bool recv_json_line(int fd, NetBuffer &buf, CJsonPtr &out_msg, string &err) {
+    array<char, 4096> chunk{};
     string line;
 
     for (;;) {
         LineStatus status = buf.pop_line(line);
-        if(staus == LineStatus::OK){
+        if (status == LineStatus::OK) {
             CJsonPtr parsed(cJSON_Parse(line.c_str()), &cJSON_Delete);
-            if(!parsed ||!cJSON_IsObject(parsed.gey())){
+            if (!parsed || !cJSON_IsObject(parsed.get())) {
                 err = "received invalid JSON from server";
                 return false;
             }
             out_msg = move(parsed);
             return true;
         }
-        if(status == LineStatus::TOO_LONG){
+        if (status == LineStatus::TOO_LONG) {
             err = "received line exceeding MAX_LINE_LENGTH";
             return false;
         }
 
         ssize_t n = ::recv(fd, chunk.data(), chunk.size(), 0);
-        if(n < 0){
-            if(errno == EINTR){
+        if (n < 0) {
+            if (errno == EINTR) {
                 continue;
             }
             err = string("recv failed : ") + strerror(errno);
             return false;
         }
-        if(n == 0){
+        if (n == 0) {
             err = "server closed connection (EOF)";
             return false;
         }
-        buf.append(chunk.data(), static_cast < size_t)(n);
+        buf.append(chunk.data(), static_cast<size_t>(n));
     }
 }
 
-string json_get_string(const cJSON *obj, const char *key){
-    cont cJSON *item = cJSON_GetObjectItemCaseSensitive(obj, key);
-    if(cJSON_IsString(item) && item->valuestring != nullptr)
+string json_get_string(const cJSON *obj, const char *key) {
+    const cJSON *item = cJSON_GetObjectItemCaseSensitive(obj, key);
+    if (cJSON_IsString(item) && item->valuestring != nullptr)
         return item->valuestring;
     return {};
 }
