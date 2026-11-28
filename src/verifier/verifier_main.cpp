@@ -61,12 +61,10 @@ bool parse_events_log(const std::string &path, std::vector<LogEntry> &out, std::
 
         LogEntry e;
         e.line_no = line_no;
-        if (!parse_kv(tokens[0], "tick", e.tick) ||
-            !parse_kv(tokens[1], "actor", e.actor) ||
+        if (!parse_kv(tokens[0], "tick", e.tick) || !parse_kv(tokens[1], "actor", e.actor) ||
             !parse_kv(tokens[2], "event", e.event) ||
             !parse_kv(tokens[3], "resource", e.resource) ||
-            !parse_kv(tokens[4], "result", e.result) ||
-            !parse_kv(tokens[5], "req", e.req)) {
+            !parse_kv(tokens[4], "result", e.result) || !parse_kv(tokens[5], "req", e.req)) {
             err = "line " + std::to_string(line_no) + ": invalid field names or order";
             return false;
         }
@@ -100,8 +98,7 @@ bool has_disconnect(const std::vector<LogEntry> &entries) {
 }
 
 bool check_unique_registration(
-    const std::vector<LogEntry> &entries,
-    const std::unordered_set<std::string> &expected_robots
+    const std::vector<LogEntry> &entries, const std::unordered_set<std::string> &expected_robots
 ) {
     std::unordered_map<std::string, int> reg_count;
     std::unordered_map<std::string, std::string> req_to_robot;
@@ -148,8 +145,7 @@ bool check_unique_registration(
 }
 
 bool check_ready_before_start(
-    const std::vector<LogEntry> &entries,
-    const std::unordered_set<std::string> &expected_robots
+    const std::vector<LogEntry> &entries, const std::unordered_set<std::string> &expected_robots
 ) {
     int start_idx = -1;
     int start_count = 0;
@@ -172,8 +168,9 @@ bool check_ready_before_start(
             }
             ready_idx[e.actor] = i;
             ready_req[e.req] = e.actor;
-        } else if (e.event == "RESPOND" && e.actor == ACTOR_SERVER &&
-                   e.result == "READY_ACCEPTED") {
+        } else if (
+            e.event == "RESPOND" && e.actor == ACTOR_SERVER && e.result == "READY_ACCEPTED"
+        ) {
             auto it = ready_req.find(e.req);
             if (it == ready_req.end()) {
                 return false;
@@ -276,8 +273,7 @@ bool check_no_action_before_start(const std::vector<LogEntry> &entries) {
 }
 
 bool check_clean_session_end(
-    const std::vector<LogEntry> &entries,
-    const std::unordered_set<std::string> &expected_robots
+    const std::vector<LogEntry> &entries, const std::unordered_set<std::string> &expected_robots
 ) {
     int end_count = 0;
     for (const auto &e : entries) {
@@ -304,8 +300,9 @@ bool check_clean_session_end(
         for (const auto &e : entries) {
             if (e.event == "DONE" && e.result == "OK" && e.req != "-") {
                 done_req[e.req] = e.actor;
-            } else if (e.event == "RESPOND" && e.actor == ACTOR_SERVER &&
-                       e.result == "DONE_ACCEPTED") {
+            } else if (
+                e.event == "RESPOND" && e.actor == ACTOR_SERVER && e.result == "DONE_ACCEPTED"
+            ) {
                 auto it = done_req.find(e.req);
                 if (it != done_req.end()) {
                     done_acked.insert(it->second);

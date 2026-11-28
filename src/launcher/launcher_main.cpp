@@ -59,8 +59,9 @@ bool read_pipe_line(int fd, std::string &out_line, int timeout_ms) {
         if (now >= deadline) {
             return false;
         }
-        int remaining_ms =
-            static_cast<int>(std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count());
+        int remaining_ms = static_cast<int>(
+            std::chrono::duration_cast<std::chrono::milliseconds>(deadline - now).count()
+        );
 
         pollfd pfd{};
         pfd.fd = fd;
@@ -181,8 +182,7 @@ int main(int argc, char *argv[]) {
     }
 
     pid_t ctrl_pid = spawn_process(
-        {"./controller", scenario_path, port_str, std::to_string(ctrl_pipe[1])},
-        ctrl_pipe[0]
+        {"./controller", scenario_path, port_str, std::to_string(ctrl_pipe[1])}, ctrl_pipe[0]
     );
     ::close(ctrl_pipe[1]); // Parent only reads
 
@@ -222,8 +222,7 @@ int main(int argc, char *argv[]) {
 
     while (!active_pids.empty()) {
         if (g_interrupted || std::chrono::steady_clock::now() >= watchdog) {
-            std::cerr << "[launcher] "
-                      << (g_interrupted ? "interrupted" : "watchdog timeout")
+            std::cerr << "[launcher] " << (g_interrupted ? "interrupted" : "watchdog timeout")
                       << " — terminating remaining processes\n";
             kill_and_reap(active_pids);
             return 1;
@@ -232,7 +231,9 @@ int main(int argc, char *argv[]) {
         int status = 0;
         pid_t done = ::waitpid(-1, &status, WNOHANG);
         if (done > 0) {
-            active_pids.erase(std::remove(active_pids.begin(), active_pids.end(), done), active_pids.end());
+            active_pids.erase(
+                std::remove(active_pids.begin(), active_pids.end(), done), active_pids.end()
+            );
             if (WIFEXITED(status)) {
                 int code = WEXITSTATUS(status);
                 std::cout << "[launcher] PID=" << done << " exited with code " << code << '\n';
